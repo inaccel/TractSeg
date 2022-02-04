@@ -9,13 +9,15 @@ RUN apt-get update -qq \
     && apt-get install -qq libnss3-dev libssl-dev libreadline-dev libffi-dev wget \
     && apt-get install -qq software-properties-common git curl
 
-# Compiling python 3.7
+# Compiling python 3.8
 RUN cd /usr/src \
-    && wget -q https://www.python.org/ftp/python/3.7.9/Python-3.7.9.tgz \
-    && tar xzf Python-3.7.9.tgz \
-    && cd Python-3.7.9 \
+    && wget -q https://www.python.org/ftp/python/3.8.0/Python-3.8.0.tgz \
+    && tar xzf Python-3.8.0.tgz \
+    && cd Python-3.8.0 \
     && ./configure --enable-optimizations >/dev/null \
-    && make install > /dev/null
+    && make install > /dev/null \
+    && wget https://bootstrap.pypa.io/get-pip.py \
+    && python3.8 get-pip.py
 
 # Install fsl (needed for bet and flirt)
 RUN apt-get update -qq \
@@ -23,22 +25,23 @@ RUN apt-get update -qq \
     && apt-get clean -qq \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN pip3.7 install -q --upgrade pip \
-    && pip3.7 install -q wheel numpy scipy nilearn matplotlib scikit-image nibabel dipy fury joblib seaborn cython \
-    && pip3.7 install -q torch==1.6.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+RUN pip3.8 install -q --upgrade pip \
+    && pip3.8 install -q wheel numpy scipy nilearn matplotlib scikit-image nibabel dipy fury joblib seaborn \
+    && pip3.8 install -q torch==1.6.0+cpu -f https://download.pytorch.org/whl/torch_stable.html \
+    && pip3.8 install coral-api
 
 RUN mkdir -p ~/.tractseg \
     && mkdir -p /code \
-    && curl -sSL -o /code/mrtrix3_RC3.tar.gz https://zenodo.org/record/1415322/files/mrtrix3_RC3.tar.gz?download=1
+    && wget -O /code/mrtrix3_RC3.tar.gz https://zenodo.org/record/1415322/files/mrtrix3_RC3.tar.gz?download=1
 
-RUN tar -zxf /code/mrtrix3_RC3.tar.gz -C code \
+RUN tar -xvf /code/mrtrix3_RC3.tar.gz -C code \
     && /code/mrtrix3/set_path
 
 # Uncomment if we want to rebuild the following commands (otherwise using cache)
 #RUN echo "rebuild"
 
-RUN pip3.7 install -q --upgrade https://github.com/MIC-DKFZ/TractSeg/archive/master.zip
-
+RUN pip3.8 install -q --upgrade https://github.com/inaccel/TractSeg/archive/fpga.zip
+    
 # Sometimes fails if running everything from cache -> uncomment line "RUN echo 'rebuild'"
 RUN download_all_pretrained_weights
 
