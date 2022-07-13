@@ -24,7 +24,7 @@ setup(name='TractSeg',
         install_requires=[
             'future',
             'numpy',
-            'nibabel>=2.3.0',
+            'nibabel>=2.3.0,<4.0.0',
             'matplotlib',
             'sklearn',
             'scipy',
