@@ -411,7 +411,9 @@ sudo docker build -t tractseg_container -f Dockerfile_CPU .
 ```
 > NOTE: With docker the option `--plot3D` of the command `plot_tractometry_results` might not work.
 
+## FPGA Integration
+The FPGA integration project has received funding from the European Union Horizon 2020 Research and Innovation program under grant agreement No. 871643 MORPHEMIC https://www.morphemic.cloud/.
+
 ## Copyright
 Copyright © German Cancer Research Center (DKFZ), Division of Medical Image Computing (MIC).
 Please make sure that your usage of this code is in compliance with the [code license](LICENSE).
-
